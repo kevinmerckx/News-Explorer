@@ -1,0 +1,5 @@
+<p-dataTable [value]="$news | async">
+  <p-column field="news" header="News"></p-column>
+  <p-column field="date" header="Published @" sortable="true"></p-column>
+  <p-column field="popularity" header="Popularity" sortable="true"></p-column>
+</p-dataTable>
