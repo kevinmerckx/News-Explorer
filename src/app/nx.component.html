@@ -3,5 +3,7 @@
     Welcome to our NG App Seed!<br>
   </h1>
   <nx-newstable></nx-newstable>
+  <div class="v-space"></div>
+  <nx-paginator [rowSize]="rowSize" [totalNews]="$totalNews | async" (pageChange)="paginationChanged($event)" ></nx-paginator>
 </div>
 
