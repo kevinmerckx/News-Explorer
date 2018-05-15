@@ -1,4 +1,11 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+
+interface Car {
+  vin: string;
+  year: string;
+  brand: string;
+  color: string;
+}
 
 @Component({
   selector: 'app-root',
@@ -6,4 +13,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.sass']
 })
 export class AppComponent {
+  cars: Car[] = [{vin: 'dffdf', year: '2018', brand: 'bmw', color: 'red'}];
+
+  selectedCars: Car[];
+
 }
