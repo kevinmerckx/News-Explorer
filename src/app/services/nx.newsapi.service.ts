@@ -16,7 +16,7 @@ export class NxNewsApiService {
 
 
   getEverything(options: RequestEverything): Observable<ArticlesResponse> {
-    let url = `${this._baseURL}everything?q=${options.query || '""'}` +
+    let url = `${this._baseURL}everything?q=${options.query || ''}` +
       `&page=${options.page}&pageSize=${options.pageSize}&apiKey=${this._apiKey}`;
 
     if (options.sources && options.sources.length > 0) {
@@ -27,7 +27,6 @@ export class NxNewsApiService {
     if (options.sorting) {
       url += `&sortBy=${options.sorting.field}`;
     }
-    console.log(url);
     return this.http.request<ArticlesResponse>('get', url);
   }
 

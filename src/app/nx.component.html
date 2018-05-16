@@ -9,5 +9,7 @@
   <nx-paginator [rowSize]="rowSize" [totalNews]="$totalArticles | async"
                 (pageChange)="paginationChanged($event)">
   </nx-paginator>
+  <p-growl [(value)]="msgs"></p-growl>
+
 </div>
 

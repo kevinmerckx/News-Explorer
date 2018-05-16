@@ -3,7 +3,7 @@ import {SelectItem} from 'primeng/api';
 import {NxNewsApiService} from '../../services/nx.newsapi.service';
 import {Source, SourcesResponse} from '../../models/model.source';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
+import {distinctUntilChanged} from 'rxjs/operators';
 import {Subject} from 'rxjs/Subject';
 
 

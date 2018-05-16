@@ -5,6 +5,7 @@ import {Article, ArticlesResponse} from './models/model.artical';
 import {combineLatest, debounceTime} from 'rxjs/operators';
 import {Source} from './models/model.source';
 import {RequestEverything} from './models/model.everything.request';
+import {Message} from 'primeng/api';
 
 @Component({
   selector: 'nx-root',
@@ -21,9 +22,11 @@ export class NxComponent implements OnInit {
   $sourcesSelected: BehaviorSubject<Source[]> = new BehaviorSubject<Source[]>([]);
   $search: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
+  // error messages
+  msgs: Message[] = [];
+
   constructor(private _service: NxNewsApiService) {
     this.$search.pipe(combineLatest(this.$sourcesSelected, this.$sorting), debounceTime(800)).subscribe(([search, sources, sorting]) => {
-      console.log([search, sources, sorting]);
       this.currentRequest = {...this.currentRequest, page: 1, query: search, sources: sources, sorting: sorting};
       this.getArticles();
     });
@@ -43,10 +46,9 @@ export class NxComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getArticles();
   }
 
-  reset() {
+  resetArticles() {
     this.$articles.next([]);
     this.$totalArticles.next(0);
   }
@@ -54,12 +56,16 @@ export class NxComponent implements OnInit {
   getArticles() {
     this._service.getEverything(this.currentRequest).subscribe((response: ArticlesResponse) => {
       if (response.status !== 'ok') {
-        this.reset();
+        this.resetArticles();
         return;
       }
 
       this.$articles.next(response.articles);
       this.$totalArticles.next(response.totalResults);
+    }, (error) => {
+      console.log(error);
+      this.msgs.push({severity: 'error', summary: 'Error-Request', detail: error.error.message});
+      this.resetArticles();
     });
   }
 
