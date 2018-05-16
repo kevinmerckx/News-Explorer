@@ -15,6 +15,9 @@ import {DataTableModule, PaginatorModule} from 'primeng/primeng';
 import {NxNewsTableComponent} from './components/newstable/nx.newstable.component';
 import {NxPaginatorComponent} from './components/paginator/nx.paginator.component';
 
+// own services
+import {NxNewsApiService} from './services/nx.newsapi.service';
+
 
 @NgModule({
   declarations: [
@@ -31,9 +34,9 @@ import {NxPaginatorComponent} from './components/paginator/nx.paginator.componen
     AngularFontAwesomeModule,
     // prime ng data tables
     DataTableModule,
-    PaginatorModule
+    PaginatorModule,
   ],
-  providers: [],
+  providers: [NxNewsApiService],
   bootstrap: [NxComponent]
 })
 export class NxModule {
