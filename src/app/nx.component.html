@@ -2,6 +2,8 @@
   <h1 class="text-center">
     Welcome to our NG App Seed!<br>
   </h1>
+  <nx-navigation></nx-navigation>
+  <div class="v-space"></div>
   <nx-newstable></nx-newstable>
   <div class="v-space"></div>
   <nx-paginator [rowSize]="rowSize" [totalNews]="$totalNews | async" (pageChange)="paginationChanged($event)" ></nx-paginator>

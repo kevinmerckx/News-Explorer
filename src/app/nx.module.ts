@@ -9,18 +9,20 @@ import {FormsModule} from '@angular/forms';
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
 
 // prime ng stuff
-import {DataTableModule, PaginatorModule} from 'primeng/primeng';
+import {ButtonModule, DataTableModule, MultiSelectModule, PaginatorModule} from 'primeng/primeng';
 
 // own components
 import {NxNewsTableComponent} from './components/newstable/nx.newstable.component';
 import {NxPaginatorComponent} from './components/paginator/nx.paginator.component';
+import { NxNavigationComponent } from './components/navigation/nx.navigation.component';
 
 
 @NgModule({
   declarations: [
     NxComponent,
     NxNewsTableComponent,
-    NxPaginatorComponent
+    NxPaginatorComponent,
+    NxNavigationComponent
   ],
   imports: [
     BrowserModule,
@@ -31,7 +33,9 @@ import {NxPaginatorComponent} from './components/paginator/nx.paginator.componen
     AngularFontAwesomeModule,
     // prime ng data tables
     DataTableModule,
-    PaginatorModule
+    PaginatorModule,
+    MultiSelectModule,
+    ButtonModule
   ],
   providers: [],
   bootstrap: [NxComponent]
