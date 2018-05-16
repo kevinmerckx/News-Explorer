@@ -16,6 +16,9 @@ import {NxNewsTableComponent} from './components/newstable/nx.newstable.componen
 import {NxPaginatorComponent} from './components/paginator/nx.paginator.component';
 import { NxNavigationComponent } from './components/navigation/nx.navigation.component';
 
+// own services
+import {NxNewsApiService} from './services/nx.newsapi.service';
+
 
 @NgModule({
   declarations: [
@@ -37,7 +40,7 @@ import { NxNavigationComponent } from './components/navigation/nx.navigation.com
     MultiSelectModule,
     ButtonModule
   ],
-  providers: [],
+  providers: [NxNewsApiService],
   bootstrap: [NxComponent]
 })
 export class NxModule {

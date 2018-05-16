@@ -4,8 +4,10 @@
   </h1>
   <nx-navigation></nx-navigation>
   <div class="v-space"></div>
-  <nx-newstable></nx-newstable>
+  <nx-newstable [articles]="$articles |async" (sortChange)="$sorting.next($event)"></nx-newstable>
   <div class="v-space"></div>
-  <nx-paginator [rowSize]="rowSize" [totalNews]="$totalNews | async" (pageChange)="paginationChanged($event)" ></nx-paginator>
+  <nx-paginator [rowSize]="rowSize" [totalNews]="$totalArticles | async"
+                (pageChange)="paginationChanged($event)">
+  </nx-paginator>
 </div>
 

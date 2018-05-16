@@ -1,6 +1,7 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {mockedNews, News} from '../../models/model.news';
+import {Article} from '../../models/model.artical';
+import {NewsTable} from '../../models/model.newstable';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -10,14 +11,28 @@ import {mockedNews, News} from '../../models/model.news';
 })
 export class NxNewsTableComponent implements OnInit {
 
-  $news: BehaviorSubject<News[]> = new BehaviorSubject<News[]>([]);
-  @Input('news') set news(news: News[]) {
+  $news: BehaviorSubject<NewsTable[]> = new BehaviorSubject<NewsTable[]>([]);
+
+  @Input('articles') set articles(articles: Article[]) {
+    const news: NewsTable[] = [];
+    for (const article of articles) {
+      news.push({
+        news: `${article.title} -- ${article.author} -- ${article.description}`,
+        popularity: article.source.name,
+        publishedAt: article.publishedAt
+      });
+    }
     this.$news.next(news);
   }
+
+  @Output()
+  sortChange: EventEmitter<any> = new EventEmitter<any>();
+
   constructor() {
   }
 
   ngOnInit() {
-    this.$news.next(mockedNews);
   }
+
+
 }
