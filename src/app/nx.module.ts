@@ -9,7 +9,7 @@ import {FormsModule} from '@angular/forms';
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
 
 // prime ng stuff
-import {ButtonModule, DataTableModule, MultiSelectModule, PaginatorModule} from 'primeng/primeng';
+import {ButtonModule, DataTableModule, GrowlModule, MultiSelectModule, PaginatorModule} from 'primeng/primeng';
 
 // own components
 import {NxNewsTableComponent} from './components/newstable/nx.newstable.component';
@@ -38,8 +38,10 @@ import {NxNewsApiService} from './services/nx.newsapi.service';
     DataTableModule,
     PaginatorModule,
     MultiSelectModule,
-    ButtonModule
-  ],
+    ButtonModule,
+   GrowlModule
+
+],
   providers: [NxNewsApiService],
   bootstrap: [NxComponent]
 })

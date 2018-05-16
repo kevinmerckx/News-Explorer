@@ -2,7 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {NxNewsApiService} from './services/nx.newsapi.service';
 import {Article, ArticlesResponse} from './models/model.artical';
-import {filter} from 'rxjs/operators';
+import {combineLatest, debounceTime} from 'rxjs/operators';
+import {Source} from './models/model.source';
+import {RequestEverything} from './models/model.everything.request';
+import {Message} from 'primeng/api';
 
 @Component({
   selector: 'nx-root',
@@ -11,13 +14,22 @@ import {filter} from 'rxjs/operators';
 })
 export class NxComponent implements OnInit {
   rowSize = 20;
-
+  currentRequest: RequestEverything = {page: 1, pageSize: this.rowSize};
   $totalArticles: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   $articles: BehaviorSubject<Article[]> = new BehaviorSubject<Article[]>([]);
   $sorting: BehaviorSubject<{ field: string, order: number }> = new BehaviorSubject<{ field: string, order: number }>(null);
 
+  $sourcesSelected: BehaviorSubject<Source[]> = new BehaviorSubject<Source[]>([]);
+  $search: BehaviorSubject<string> = new BehaviorSubject<string>('');
+
+  // error messages
+  msgs: Message[] = [];
+
   constructor(private _service: NxNewsApiService) {
-    this.$sorting.pipe(filter(value => !!value)).subscribe((value) => this.getArticles(1, value));
+    this.$search.pipe(combineLatest(this.$sourcesSelected, this.$sorting), debounceTime(800)).subscribe(([search, sources, sorting]) => {
+      this.currentRequest = {...this.currentRequest, page: 1, query: search, sources: sources, sorting: sorting};
+      this.getArticles();
+    });
 
   }
 
@@ -28,28 +40,33 @@ export class NxComponent implements OnInit {
    */
   paginationChanged(evt: any) {
     // get new news here data here
-    console.log(`pagination event ${JSON.stringify(evt)}`);
-    this.getArticles(++evt['page']);
+    this.currentRequest = {...this.currentRequest, page: ++evt['page']};
+
+    this.getArticles();
   }
 
   ngOnInit(): void {
-    this.getArticles(1);
   }
 
-  reset() {
+  resetArticles() {
     this.$articles.next([]);
     this.$totalArticles.next(0);
   }
 
-  getArticles(page: number, sorting?: { field: string, order: number }) {
-    this._service.getEverything({pageSize: this.rowSize, page: page, sorting: sorting}).subscribe((response: ArticlesResponse) => {
+  getArticles() {
+    this._service.getEverything(this.currentRequest).subscribe((response: ArticlesResponse) => {
       if (response.status !== 'ok') {
-        this.reset();
+        this.resetArticles();
         return;
       }
 
       this.$articles.next(response.articles);
       this.$totalArticles.next(response.totalResults);
+    }, (error) => {
+      console.log(error);
+      this.msgs.push({severity: 'error', summary: 'Error-Request', detail: error.error.message});
+      this.resetArticles();
     });
   }
+
 }
