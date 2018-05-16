@@ -2,10 +2,11 @@
 
   <div class="ui-inputgroup fc-30">
     <span class="ui-inputgroup-addon"><i class="fa fa-search"></i></span>
-    <input type="text" pInputText placeholder="Search">
+    <input type="text" pInputText placeholder="Search" (keyup)="$search.next($event.target.value)">
   </div>
 
-  <p-multiSelect class="fc-50"  defaultLabel="Choose Sources" [options]="cities1" [(ngModel)]="selectedCities1"></p-multiSelect>
+  <p-multiSelect class="fc-50" defaultLabel="Choose Sources" [options]="$sourceItems| async"
+                 (onChange)="$selectedSources.next($event)"></p-multiSelect>
 
   <button class="fc-20" pButton type="button" label="Save"></button>
 </div>

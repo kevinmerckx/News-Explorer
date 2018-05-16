@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {SelectItem} from 'primeng/api';
+import {NxNewsApiService} from '../../services/nx.newsapi.service';
+import {Source, SourcesResponse} from '../../models/model.source';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
+import {Subject} from 'rxjs/Subject';
 
-interface City {
-  name: string;
-  code: string;
-}
 
 @Component({
   selector: 'nx-navigation',
@@ -13,35 +14,45 @@ interface City {
 })
 export class NxNavigationComponent implements OnInit {
 
-  cities1: SelectItem[];
+  $sourceItems: BehaviorSubject<SelectItem[]> = new BehaviorSubject<SelectItem[]>([]);
+  $selectedSources: Subject<Source[]> = new Subject<Source[]>();
+  $search: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
-  cities2: City[] ;
+  @Output()
+  changeSources: EventEmitter<Source[]> = new EventEmitter<Source[]>();
 
-  selectedCities1: City[];
+  @Output()
+  search: EventEmitter<string> = new EventEmitter<string>();
 
-  selectedCities2: City[];
+  constructor(private _service: NxNewsApiService) {
 
-  constructor() {
-    // SelectItem API with label-value pairs
-    this.cities1 = [
-      {label: 'New York', value: {id: 1, name: 'New York', code: 'NY'}},
-      {label: 'Rome', value: {id: 2, name: 'Rome', code: 'RM'}},
-      {label: 'London', value: {id: 3, name: 'London', code: 'LDN'}},
-      {label: 'Istanbul', value: {id: 4, name: 'Istanbul', code: 'IST'}},
-      {label: 'Paris', value: {id: 5, name: 'Paris', code: 'PRS'}}
-    ];
-
-    // An array of cities
-    this.cities2 = [
-      {name: 'New York', code: 'NY'},
-      {name: 'Rome', code: 'RM'},
-      {name: 'London', code: 'LDN'},
-      {name: 'Istanbul', code: 'IST'},
-      {name: 'Paris', code: 'PRS'}
-    ];
+    // throwing events
+    this.$selectedSources.subscribe((sources: Source[]) => {
+      this.changeSources.emit(sources);
+    });
+    this.$search.pipe(distinctUntilChanged())
+      .subscribe((search: string) => this.search.emit(search));
   }
 
   ngOnInit(): void {
+    this._service.getSources().subscribe((response: SourcesResponse) => {
+      if (response.status !== 'ok') {
+        this.reset();
+        return;
+      }
+      const sourceItems: SelectItem[] = [];
+      for (const source of response.sources) {
+        sourceItems.push({
+          label: source.name,
+          value: source
+        });
+      }
+      this.$sourceItems.next(sourceItems);
+    });
   }
 
+  reset() {
+    this.$sourceItems.next([]);
+    this.$selectedSources.next([]);
+  }
 }

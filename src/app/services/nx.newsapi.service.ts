@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {ArticlesResponse} from '../models/model.artical';
-import {SourcesResponse} from '../models/model.source';
+import {Source, SourcesResponse} from '../models/model.source';
 import {RequestEverything} from '../models/model.everything.request';
 
 @Injectable()
@@ -16,9 +16,14 @@ export class NxNewsApiService {
 
 
   getEverything(options: RequestEverything): Observable<ArticlesResponse> {
-    let url = `${this._baseURL}everything?q=${options.query || 'all'}` +
+    let url = `${this._baseURL}everything?q=${options.query || '""'}` +
       `&page=${options.page}&pageSize=${options.pageSize}&apiKey=${this._apiKey}`;
 
+    if (options.sources && options.sources.length > 0) {
+      url += `&sources=${options.sources.map(function (elem: Source) {
+        return elem.id;
+      }).join(',')}`;
+    }
     if (options.sorting) {
       url += `&sortBy=${options.sorting.field}`;
     }

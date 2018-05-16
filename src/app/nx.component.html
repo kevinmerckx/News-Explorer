@@ -2,7 +2,7 @@
   <h1 class="text-center">
     Welcome to our NG App Seed!<br>
   </h1>
-  <nx-navigation></nx-navigation>
+  <nx-navigation (changeSources)="    this.$sourcesSelected.next($event.value)" (search)="this.$search.next($event)"></nx-navigation>
   <div class="v-space"></div>
   <nx-newstable [articles]="$articles |async" (sortChange)="$sorting.next($event)"></nx-newstable>
   <div class="v-space"></div>
